@@ -22,7 +22,7 @@ def "url parse filename" [] {  # -> string
     url parse | get path | path parse | update parent "" | path join
 }
 
-def "bing_url parse filename" [] {  # -> string
+def "bing url parse filename" [] {  # -> string
     url parse | get params.id
 }
 
@@ -46,7 +46,7 @@ export def main [] {
         | get images.url.0
     )" ]
         | wrap url
-        | upsert filename {|it| $it.url | bing_url parse filename}
+        | upsert filename {|it| $it.url | bing url parse filename}
     )
 
     let all_pod = (
