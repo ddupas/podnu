@@ -55,7 +55,7 @@ export def main [] {
     )
 
     let already_downloaded_images = (
-        ls *.jpg | get name
+        try { ls *.jpg | get name } catch { [] }
     )
 
     let photos_to_download = (
