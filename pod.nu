@@ -7,20 +7,13 @@
 
 use std log
 
-# parse the name of a URL-based file path
 #
-# # Example:
-# ```nushell
-# use std assert
+# parse the name of a URL-based file path ending with a filename
 #
-# let input = "https://i.natgeofe.com/n/ffe12b1d-8191-44ec-bfb9-298e0dd29825/NationalGeographic_2745739.jpg"
-# let expected = "NationalGeographic_2745739.jpg"
-#
-# assert equal ($input | url parse filename) $expected
-# ```
 def "url parse filename" [] {  # -> string
     url parse | get path | path parse | update parent "" | path join
 }
+
 
 def "bing url parse filename" [] {  # -> string
     url parse | get params.id
@@ -75,17 +68,25 @@ export def main [] {
     ()
 }
 
-use std assert
+# TODO: gitinclude ddupas/nu-unit-test.git
+# use nu-unit-test.nu
 
-#[test]
-export def url_parse [] {
+use assert
+
+def 'test url parse' [] {
     let input = "https://i.natgeofe.com/n/ffe12b1d-8191-44ec-bfb9-298e0dd29825/NationalGeographic_2745739.jpg"
     let expected = "NationalGeographic_2745739.jpg"
     assert equal ($input | url parse filename) $expected
 }
 
-export def bing_url_parse [] {
+def 'test bing url parse' [] {
     let input = "http://bing.com/th?id=OHR.CorfuBeach_EN-US1955770867_1920x1080.jpg&rf=LaDigue_1920x1080.jpg&pid=hp"
     let expected = "OHR.CorfuBeach_EN-US1955770867_1920x1080.jpg"
-    assert equal ($input | bing_url parse filename) $expected
+    assert equal ($input | bing url parse filename) $expected
 }
+
+let tests = [ ( test bing url parse  ) ( test url parse ) ]
+
+
+
+
