@@ -47,7 +47,9 @@ export def main [] {
         | append $bing_pod
     )
 
-    let already_downloaded_images = try { ls *.jpg | get name } catch { [] }
+    let already_downloaded_images = (
+    	try { ls *.jpg | get name } catch { [] }
+    )
 
     let photos_to_download = (
         $all_pod | where {|it|
