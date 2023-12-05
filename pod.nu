@@ -92,3 +92,13 @@ let tests = [ ( test bing url parse  ) ( test url parse ) ]
 
 
 
+export def 'trim file names' []  {
+ls 
+| select name 
+| upsert len { ($in.name | str length) } 
+| where len > 60 
+| upsert stem1 { ( $in.name | path parse | get stem | str substring 0..55 ) }
+| upsert ext { ($in.name | path parse | get extension ) }
+| upsert mv2 { $"($in.stem1).($in.ext)" } 
+| each { mv $in.name $in.mv2 }
+}
