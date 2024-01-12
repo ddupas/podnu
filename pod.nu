@@ -95,10 +95,12 @@ let tests = [ ( test bing url parse  ) ( test url parse ) ]
 export def 'trim file names' []  {
 ls 
 | select name 
-| upsert len { ($in.name | str length) } 
+| upsert len {|i| ($i.name | str length) } 
 | where len > 60 
-| upsert stem1 { ( $in.name | path parse | get stem | str substring 0..55 ) }
-| upsert ext { ($in.name | path parse | get extension ) }
-| upsert mv2 { $"($in.stem1).($in.ext)" } 
-| each { mv $in.name $in.mv2 }
+| upsert stem1 {|i| ( $i.name | path parse | get stem | str substring 0..55 ) }
+| upsert ext {|i| ($i.name | path parse | get extension ) }
+| upsert mv2 {|i| $"($i.stem1).($i.ext)" } 
+| each {|i| if $i.name != $i.mv2 { mv -f $i.name $i.mv2 } }
 }
+
+print 'sourced'
