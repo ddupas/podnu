@@ -73,7 +73,7 @@ export def main [] {
 # TODO: gitinclude ddupas/nu-unit-test.git
 # use nu-unit-test.nu
 
-use assert
+use std assert
 
 def 'test url parse' [] {
     let input = "https://i.natgeofe.com/n/ffe12b1d-8191-44ec-bfb9-298e0dd29825/NationalGeographic_2745739.jpg"
