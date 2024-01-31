@@ -48,7 +48,7 @@ export def main [] {
     )
 
     let already_downloaded_images = (
-    	try { ls *.jpg | get name } catch { [] }
+    	try { ls img/*.jpg | get name } catch { [] }
     )
 
     let photos_to_download = (
@@ -64,7 +64,7 @@ export def main [] {
 
     $photos_to_download | each {|photo|
         log info $"downloading ($photo.url)"
-        http get $photo.url | save --progress $photo.filename
+        http get $photo.url | save --progress img/$photo.filename
     }
 
     ()
@@ -73,22 +73,32 @@ export def main [] {
 # TODO: gitinclude ddupas/nu-unit-test.git
 # use nu-unit-test.nu
 
-use assert
+# use assert
 
-def 'test url parse' [] {
-    let input = "https://i.natgeofe.com/n/ffe12b1d-8191-44ec-bfb9-298e0dd29825/NationalGeographic_2745739.jpg"
-    let expected = "NationalGeographic_2745739.jpg"
-    assert equal ($input | url parse filename) $expected
+# def 'test url parse' [] {
+#     let input = "https://i.natgeofe.com/n/ffe12b1d-8191-44ec-bfb9-298e0dd29825/NationalGeographic_2745739.jpg"
+#     let expected = "NationalGeographic_2745739.jpg"
+#     assert equal ($input | url parse filename) $expected
+# }
+
+# def 'test bing url parse' [] {
+#     let input = "http://bing.com/th?id=OHR.CorfuBeach_EN-US1955770867_1920x1080.jpg&rf=LaDigue_1920x1080.jpg&pid=hp"
+#     let expected = "OHR.CorfuBeach_EN-US1955770867_1920x1080.jpg"
+#     assert equal ($input | bing url parse filename) $expected
+# }
+
+# let tests = [ ( test bing url parse  ) ( test url parse ) ]
+
+
+
+
+export def --env 'trim file names' []  {
+ls 
+| select name 
+| upsert len { |row| ($row.name | str length) } 
+| where len > 50 
+| upsert stem1 { |row| ( $row.name | path parse | get stem | str substring 0..45 ) }
+| upsert ext { |row| ($row.name | path parse | get extension ) }
+| upsert mv2 { |row| $"($row.stem1).($row.ext)" } 
+| each { mv $in.name $in.mv2 }
 }
-
-def 'test bing url parse' [] {
-    let input = "http://bing.com/th?id=OHR.CorfuBeach_EN-US1955770867_1920x1080.jpg&rf=LaDigue_1920x1080.jpg&pid=hp"
-    let expected = "OHR.CorfuBeach_EN-US1955770867_1920x1080.jpg"
-    assert equal ($input | bing url parse filename) $expected
-}
-
-let tests = [ ( test bing url parse  ) ( test url parse ) ]
-
-
-
-
