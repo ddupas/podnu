@@ -48,7 +48,7 @@ export def main [] {
     )
 
     let already_downloaded_images = (
-    	try { ls img/*.jpg | get name } catch { [] }
+    	try { cd img; ls *.jpg | get name } catch { [] }
     )
 
     let photos_to_download = (
@@ -64,7 +64,7 @@ export def main [] {
 
     $photos_to_download | each {|photo|
         log info $"downloading ($photo.url)"
-        http get $photo.url | save --progress img/$photo.filename
+        http get $photo.url | save -f --progress $"img/($photo.filename)"
     }
 
     ()
