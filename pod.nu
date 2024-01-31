@@ -73,7 +73,11 @@ export def main [] {
 # TODO: gitinclude ddupas/nu-unit-test.git
 # use nu-unit-test.nu
 
+<<<<<<< HEAD
 # use assert
+=======
+use std assert
+>>>>>>> refs/remotes/origin/main
 
 # def 'test url parse' [] {
 #     let input = "https://i.natgeofe.com/n/ffe12b1d-8191-44ec-bfb9-298e0dd29825/NationalGeographic_2745739.jpg"
@@ -102,3 +106,30 @@ ls
 | upsert mv2 { |row| $"($row.stem1).($row.ext)" } 
 | each { mv $in.name $in.mv2 }
 }
+<<<<<<< HEAD
+=======
+
+def 'test bing url parse' [] {
+    let input = "http://bing.com/th?id=OHR.CorfuBeach_EN-US1955770867_1920x1080.jpg&rf=LaDigue_1920x1080.jpg&pid=hp"
+    let expected = "OHR.CorfuBeach_EN-US1955770867_1920x1080.jpg"
+    assert equal ($input | bing url parse filename) $expected
+}
+
+let tests = [ ( test bing url parse  ) ( test url parse ) ]
+
+
+
+
+export def 'trim file names' []  {
+ls 
+| select name 
+| upsert len {|i| ($i.name | str length) } 
+| where len > 60 
+| upsert stem1 {|i| ( $i.name | path parse | get stem | str substring 0..55 ) }
+| upsert ext {|i| ($i.name | path parse | get extension ) }
+| upsert mv2 {|i| $"($i.stem1).($i.ext)" } 
+| each {|i| if $i.name != $i.mv2 { mv -f $i.name $i.mv2 } }
+}
+
+print 'sourced'
+>>>>>>> refs/remotes/origin/main
