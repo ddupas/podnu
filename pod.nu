@@ -63,8 +63,9 @@ export def main [] {
     }
 
     $photos_to_download | each {|photo|
-        log info $"downloading ($photo.url)"
-        http get $photo.url | save -f --progress $"img/($photo.filename)"
+         log info $"downloading ($photo.url)"
+         print $"downloading ($photo.filename)"
+         http get $photo.url | save -f --progress $"($photo.filename)"
     }
 
     ()
