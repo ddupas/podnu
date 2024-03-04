@@ -101,5 +101,5 @@ ls
 | upsert stem1 { |row| ( $row.name | path parse | get stem | str substring 0..45 ) }
 | upsert ext { |row| ($row.name | path parse | get extension ) }
 | upsert mv2 { |row| $"($row.stem1).($row.ext)" } 
-| each { mv $in.name $in.mv2 }
+| each { mv -f $in.name $in.mv2 }
 }
