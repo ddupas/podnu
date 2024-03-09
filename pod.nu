@@ -62,7 +62,7 @@ export def main [] {
         return ()
     }
 
-    $photos_to_download | each {|photo|
+    $photos_to_download | par-each {|photo|
          log info $"downloading ($photo.url)"
          print $"downloading ($photo.filename)"
          http get $photo.url | save -f --progress $"($photo.filename)"
@@ -101,5 +101,5 @@ ls
 | upsert stem1 { |row| ( $row.name | path parse | get stem | str substring 0..45 ) }
 | upsert ext { |row| ($row.name | path parse | get extension ) }
 | upsert mv2 { |row| $"($row.stem1).($row.ext)" } 
-| each { mv -f $in.name $in.mv2 }
+| each { mv $in.name $in.mv2 }
 }
